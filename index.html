@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Versent + AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #C9FF00;
+      --green-dim:  rgba(201,255,0,0.12);
+      --black:      #080808;
+      --dark:       #0E0E0E;
+      --darker:     #111111;
+      --card-bg:    #141414;
+      --white:      #FFFFFF;
+      --muted:      #777777;
+      --border:     rgba(255,255,255,0.07);
+      --border-md:  rgba(255,255,255,0.11);
+
+      --orange:     #E8773A;
+      --orange-bg:  rgba(232,119,58,0.10);
+      --orange-bdr: rgba(232,119,58,0.22);
+
+      --teal:       #2DB896;
+      --teal-bg:    rgba(45,184,150,0.10);
+      --teal-bdr:   rgba(45,184,150,0.22);
+
+      --indigo:     #6B6BE8;
+      --indigo-bg:  rgba(107,107,232,0.10);
+      --indigo-bdr: rgba(107,107,232,0.22);
+
+      --purple:     #9B59D6;
+      --purple-bg:  rgba(155,89,214,0.10);
+      --purple-bdr: rgba(155,89,214,0.22);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ─── UTILITY ─── */
+    .container { max-width: 1160px; margin: 0 auto; }
+    .text-green  { color: var(--green); }
+    .text-orange { color: var(--orange); }
+    .text-teal   { color: var(--teal); }
+    .text-indigo { color: var(--indigo); }
+    .text-purple { color: var(--purple); }
+    .text-muted  { color: var(--muted); }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 64px;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    }
+
+    .nav-wordmark {
+      font-size: 1rem; font-weight: 800; letter-spacing: -0.03em; color: var(--white);
+    }
+    .nav-wordmark em { color: var(--green); font-style: normal; }
+
+    .nav-links {
+      display: flex; list-style: none; gap: 2rem;
+    }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px;
+      transition: all 0.25s;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      padding: 8rem 2rem 5rem; overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% -15%, rgba(201,255,0,0.13) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 45% at 15% 70%, rgba(107,107,232,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 40% at 85% 45%, rgba(45,184,150,0.06) 0%, transparent 55%),
+        var(--black);
+      animation: heroShift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes heroShift {
+      0%   { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(20deg); }
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 860px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--green); border: 1px solid rgba(201,255,0,0.28); border-radius: 100px;
+      padding: 0.35rem 0.9rem; margin-bottom: 1.5rem;
+    }
+    .eyebrow-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; } 50% { opacity: 0.2; }
+    }
+
+    .hero-title {
+      font-size: clamp(3.2rem, 9vw, 7.5rem);
+      font-weight: 900; letter-spacing: -0.05em; line-height: 0.95;
+      margin-bottom: 1.75rem;
+    }
+    .hero-title .plus { color: var(--green); }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.55); max-width: 580px; margin: 0 auto 2.5rem;
+      line-height: 1.75; font-weight: 400;
+    }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 1.9rem; border-radius: 100px;
+      background: var(--green); color: #080808;
+      font-weight: 700; font-size: 0.875rem; letter-spacing: 0.02em;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .hero-cta:hover {
+      background: #d8ff33; transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(201,255,0,0.28);
+    }
+
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      color: var(--muted); font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, transparent, var(--muted));
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0%,100% { opacity: 0.3; transform: scaleY(1); }
+      50%      { opacity: 0.9; transform: scaleY(0.7); }
+    }
+
+    /* ─── SECTION BASE ─── */
+    .section { padding: 7rem 2rem; }
+    .section-sm { padding: 5rem 2rem; }
+
+    .section-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--green); margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.08; margin-bottom: 1.25rem;
+    }
+    .section-lead {
+      font-size: 1.05rem; color: rgba(255,255,255,0.6); max-width: 640px; line-height: 1.8;
+    }
+
+    /* ─── WHAT IS IT ─── */
+    .what { background: var(--darker); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .what-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    }
+
+    .quote-block {
+      border-left: 3px solid var(--green); padding: 1.5rem 1.75rem;
+      background: var(--green-dim); border-radius: 0 12px 12px 0;
+      font-size: 1.05rem; font-weight: 600; line-height: 1.65;
+      color: rgba(255,255,255,0.92); margin-bottom: 1.5rem;
+    }
+
+    .mit-pill {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.38rem 0.85rem; border-radius: 100px; font-size: 0.72rem; font-weight: 600;
+      border: 1px solid var(--orange-bdr); color: var(--orange); background: var(--orange-bg);
+    }
+
+    .body-copy p {
+      color: rgba(255,255,255,0.62); margin-bottom: 1.2rem; line-height: 1.8; font-size: 0.97rem;
+    }
+    .body-copy p:last-child { margin-bottom: 0; }
+    .body-copy strong { color: var(--white); font-weight: 600; }
+
+    /* ─── PILLARS (FLIP CARDS) ─── */
+    .pillars { background: var(--black); }
+    .pillars-header { text-align: center; margin-bottom: 4rem; }
+    .pillars-header .section-lead { margin: 0 auto; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    /* 3D flip mechanics */
+    .flip-card { perspective: 1200px; height: 430px; cursor: pointer; }
+
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flip-card:hover .flip-inner,
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+
+    .flip-front, .flip-back {
+      position: absolute; inset: 0; border-radius: 20px;
+      padding: 1.75rem; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    .flip-back {
+      transform: rotateY(180deg);
+      overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    .flip-back::-webkit-scrollbar { width: 3px; }
+    .flip-back::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+    /* Per-pillar colours */
+    .c-gov .flip-front  { background: linear-gradient(150deg,#1C1208,#251608); border: 1px solid var(--orange-bdr); }
+    .c-gov .flip-back   { background: linear-gradient(150deg,#251608,#1C1208); border: 1px solid rgba(232,119,58,0.3); }
+    .c-gov .card-accent { color: var(--orange); }
+    .c-gov .card-icon-wrap { background: var(--orange-bg); }
+    .c-gov .pill-tag    { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-bdr); }
+    .c-gov .dot-accent  { background: var(--orange); }
+
+    .c-int .flip-front  { background: linear-gradient(150deg,#081812,#0C2018); border: 1px solid var(--teal-bdr); }
+    .c-int .flip-back   { background: linear-gradient(150deg,#0C2018,#081812); border: 1px solid rgba(45,184,150,0.3); }
+    .c-int .card-accent { color: var(--teal); }
+    .c-int .card-icon-wrap { background: var(--teal-bg); }
+    .c-int .pill-tag    { background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-bdr); }
+    .c-int .dot-accent  { background: var(--teal); }
+
+    .c-del .flip-front  { background: linear-gradient(150deg,#0E0E1C,#12122A); border: 1px solid var(--indigo-bdr); }
+    .c-del .flip-back   { background: linear-gradient(150deg,#12122A,#0E0E1C); border: 1px solid rgba(107,107,232,0.3); }
+    .c-del .card-accent { color: var(--indigo); }
+    .c-del .card-icon-wrap { background: var(--indigo-bg); }
+    .c-del .pill-tag    { background: var(--indigo-bg); color: var(--indigo); border: 1px solid var(--indigo-bdr); }
+    .c-del .dot-accent  { background: var(--indigo); }
+
+    .c-cus .flip-front  { background: linear-gradient(150deg,#150E1C,#1C1228); border: 1px solid var(--purple-bdr); }
+    .c-cus .flip-back   { background: linear-gradient(150deg,#1C1228,#150E1C); border: 1px solid rgba(155,89,214,0.3); }
+    .c-cus .card-accent { color: var(--purple); }
+    .c-cus .card-icon-wrap { background: var(--purple-bg); }
+    .c-cus .pill-tag    { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-bdr); }
+    .c-cus .dot-accent  { background: var(--purple); }
+
+    /* Card internals */
+    .card-icon-wrap {
+      width: 48px; height: 48px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem;
+    }
+    .card-icon-wrap svg { width: 24px; height: 24px; }
+
+    .card-num {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+      margin-bottom: 0.85rem;
+    }
+
+    .card-rule { height: 1px; background: rgba(255,255,255,0.06); margin-bottom: 0.85rem; }
+
+    .card-desc {
+      font-size: 0.82rem; color: rgba(255,255,255,0.52); line-height: 1.65; margin-bottom: 1.1rem;
+    }
+
+    .pill-tag {
+      display: inline-block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.28rem 0.7rem; border-radius: 100px;
+    }
+
+    .flip-hint {
+      position: absolute; bottom: 1.25rem; right: 1.25rem;
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.65rem; color: rgba(255,255,255,0.2); letter-spacing: 0.04em;
+      pointer-events: none;
+    }
+
+    /* Back content */
+    .back-head {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 1rem;
+    }
+
+    .back-group { margin-bottom: 1.1rem; }
+
+    .back-group-label {
+      font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem;
+    }
+
+    .back-list { list-style: none; display: flex; flex-direction: column; gap: 0.42rem; }
+    .back-list li {
+      display: flex; align-items: flex-start; gap: 0.55rem;
+      font-size: 0.8rem; color: rgba(255,255,255,0.68); line-height: 1.45;
+    }
+    .back-list li::before {
+      content: '';
+      width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 0.5em;
+    }
+    .c-gov .back-list li::before { background: var(--orange); }
+    .c-int .back-list li::before { background: var(--teal); }
+    .c-del .back-list li::before { background: var(--indigo); }
+    .c-cus .back-list li::before { background: var(--purple); }
+
+    /* ─── DETAIL SECTIONS ─── */
+    .detail { padding: 6.5rem 2rem; }
+    .detail-alt { background: var(--darker); }
+
+    .detail-header {
+      display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 3.5rem;
+    }
+
+    .detail-icon {
+      width: 60px; height: 60px; border-radius: 17px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .detail-icon svg { width: 30px; height: 30px; }
+
+    .detail-num {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.2rem;
+    }
+    .detail-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.6rem); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.05;
+    }
+
+    .detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+    }
+
+    .body-copy-sm p {
+      color: rgba(255,255,255,0.62); margin-bottom: 1.1rem;
+      line-height: 1.8; font-size: 0.95rem;
+    }
+    .body-copy-sm p:last-child { margin-bottom: 0; }
+    .body-copy-sm strong { color: var(--white); font-weight: 600; }
+
+    .feature-list { display: flex; flex-direction: column; gap: 0.85rem; }
+
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.1rem 1.25rem; border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .feature-item:hover {
+      background: rgba(255,255,255,0.045); border-color: var(--border-md);
+    }
+
+    .f-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 0.42em;
+    }
+
+    .feature-item h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.18rem; }
+    .feature-item p  { font-size: 0.78rem; color: rgba(255,255,255,0.48); margin: 0; line-height: 1.5; }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.25rem; }
+    .chip {
+      padding: 0.32rem 0.8rem; border-radius: 100px;
+      font-size: 0.72rem; font-weight: 600; border: 1px solid; letter-spacing: 0.02em;
+    }
+
+    .tool-box {
+      padding: 1.25rem 1.5rem; border-radius: 14px; margin-top: 1.25rem;
+    }
+    .tool-box-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+
+    /* ─── APPROACH ─── */
+    .approach { background: var(--darker); border-top: 1px solid var(--border); }
+
+    .approach-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.75rem; margin-bottom: 1rem;
+      transition: all 0.2s;
+    }
+    .approach-card:hover { background: rgba(255,255,255,0.04); border-color: var(--border-md); }
+
+    .approach-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .approach-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .approach-card p  { font-size: 0.83rem; color: rgba(255,255,255,0.52); line-height: 1.6; }
+
+    .pillar-cards-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;
+    }
+
+    .meta-row {
+      display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 0.75rem;
+    }
+    .meta-item dt {
+      font-size: 0.68rem; color: var(--muted); font-weight: 500;
+      letter-spacing: 0.05em; margin-bottom: 0.22rem;
+    }
+    .meta-item dd { font-size: 0.9rem; font-weight: 600; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--black); border-top: 1px solid var(--border);
+      padding: 3rem 2rem; text-align: center;
+    }
+    .footer-brand {
+      display: flex; align-items: center; justify-content: center; gap: 0.65rem; margin-bottom: 0.85rem;
+    }
+    .footer-brand span { font-size: 0.95rem; font-weight: 800; letter-spacing: -0.03em; }
+    .footer-brand em { color: var(--green); font-style: normal; }
+    footer p { font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
+
+    /* ─── FADE-IN SCROLL ─── */
+    .fi {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fi.in { opacity: 1; transform: none; }
+    .fi.d1 { transition-delay: 0.1s; }
+    .fi.d2 { transition-delay: 0.2s; }
+    .fi.d3 { transition-delay: 0.3s; }
+    .fi.d4 { transition-delay: 0.4s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 860px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { display: none; position: fixed; top: 64px; left: 0; right: 0;
+        flex-direction: column; gap: 0; background: rgba(8,8,8,0.97);
+        border-bottom: 1px solid var(--border); padding: 1rem 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 0.85rem 1.75rem; font-size: 0.95rem; }
+      .hamburger { display: flex; }
+
+      .what-grid, .detail-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .detail-header { flex-direction: column; gap: 0.85rem; }
+      .section { padding: 5rem 1.5rem; }
+      .detail { padding: 5rem 1.5rem; }
+    }
+
+    @media (max-width: 640px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .flip-card { height: auto; perspective: none; }
+      .flip-inner { transform: none !important; transform-style: flat; }
+      .flip-front, .flip-back {
+        position: static; transform: none;
+        backface-visibility: visible; -webkit-backface-visibility: visible;
+        border-radius: 0;
+      }
+      .flip-front { border-radius: 20px 20px 0 0; }
+      .flip-back {
+        display: none;
+        border-radius: 0 0 20px 20px;
+        border-top: none;
+        overflow: visible;
+      }
+      .flip-card.flipped .flip-back { display: block; }
+      .flip-hint { display: none; }
+
+      .hero-title { font-size: 3rem; }
+      .section { padding: 4rem 1.25rem; }
+      .detail { padding: 4rem 1.25rem; }
+    }
+
+    @media (max-width: 380px) {
+      .hero-title { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="#top" class="nav-logo">
+    <div class="logo-mark">
+      <!-- Versent V-mark (double chevron) -->
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 5L15 22L26 5" stroke="#C9FF00" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 5L15 14.5L21 5" stroke="#C9FF00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+      </svg>
+    </div>
+    <span class="nav-wordmark">Versent <em>+ AI</em></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#governance">Governance</a></li>
+    <li><a href="#internal">Internal AI</a></li>
+    <li><a href="#delivery">Delivery AI</a></li>
+    <li><a href="#customers">Customers</a></li>
+    <li><a href="#approach">Approach</a></li>
+  </ul>
+  <div class="hamburger" id="burger" role="button" aria-label="Toggle menu" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="eyebrow">
+      <span class="eyebrow-dot"></span>
+      Hello Future
+    </div>
+    <h1 class="hero-title">
+      Versent<br><span class="plus">+ AI</span>
+    </h1>
+    <p class="hero-sub">
+      Showing what Versent's AI capability actually looks like in practice.
+      Not just claiming it — proving it.
+    </p>
+    <a href="#what" class="hero-cta">
+      Explore our approach
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path d="M7.5 3v9M7.5 12L4 8.5M7.5 12L11 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ─── WHAT IS IT ─── -->
+<section class="what section" id="what">
+  <div class="container">
+    <div class="what-grid">
+      <div class="fi">
+        <div class="section-label">What is it?</div>
+        <h2 class="section-title">One consistent story<br>we can be proud of</h2>
+        <div class="quote-block">
+          A high level deliverable that incorporates content and a narrative around Versent's AI experience, adoption &amp; capability — shareable by customer-facing teams and easily tailored to different audiences.
+        </div>
+        <div class="mit-pill">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.1"/>
+            <path d="M5.5 4.5v3.5M5.5 3v.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+          </svg>
+          Informed by MIT Enterprise AI Maturity Framework
+        </div>
+      </div>
+      <div class="body-copy fi d1">
+        <p>We want to show what Versent's AI capability actually looks like in practice, not just claim it.</p>
+        <p>We're collecting the stories that prove it: where we've adopted AI ourselves (<strong class="text-teal">Internal AI</strong>), where we've got good at it for customers (<strong class="text-purple">AI in our Customers</strong>), and where it's changed how we work (<strong class="text-indigo">Delivery AI</strong>).</p>
+        <p>The target audience isn't just our customers — it's our people too. Building confidence in our adoption story so they can tell customers with confidence that we're an AI-first organisation that can be trusted to deliver.</p>
+        <p><strong>The aim is trust.</strong> We want customers to know Versent is the right partner for their own AI adoption, and to see that we're living it right alongside them, not selling from the sidelines.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOUR PILLARS ─── -->
+<section class="pillars section" id="pillars">
+  <div class="container">
+    <div class="pillars-header fi">
+      <div class="section-label">Structure Breakdown</div>
+      <h2 class="section-title">Four Pillars</h2>
+      <p class="section-lead">
+        Hover each card to see what's inside. On mobile, tap to reveal.
+      </p>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- CARD 1: GOVERNANCE -->
+      <div class="flip-card c-gov fi d1" onclick="tapFlip(this)" role="button" aria-label="AI Governance card">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div class="card-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L3 7v5c0 5 3.8 9.7 9 11 5.2-1.3 9-6 9-11V7L12 2Z" stroke="#E8773A" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M8.5 12l2.5 2.5 5-5" stroke="#E8773A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="card-num">01</div>
+            <h3 class="card-title card-accent">Versent's AI Governance&nbsp;/ Adoption Approach</h3>
+            <div class="card-rule"></div>
+            <p class="card-desc">Where businesses are winging it, we've built a mature model anchored in the MIT Enterprise AI Maturity Framework.</p>
+            <span class="pill-tag">Foundation Layer</span>
+            <div class="flip-hint">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M1.5 5.5h8M6.5 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Hover for detail
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="back-head card-accent">AI Governance Approach</div>
+            <div class="back-group">
+              <div class="back-group-label">What it covers</div>
+              <ul class="back-list">
+                <li>Adoption and assessment of AI tools, integrating AI into our processes</li>
+                <li>A mature governance model businesses can take inspiration from or emulate</li>
+                <li>Anchored in the MIT Enterprise AI Maturity Framework</li>
+                <li>Single-slide AI strategy with crisp narrative around the journey to date</li>
+              </ul>
+            </div>
+            <div class="back-group">
+              <div class="back-group-label">The point</div>
+              <ul class="back-list">
+                <li>Most businesses are still winging it — we're not</li>
+                <li>This sits across the top as the foundation for everything below</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: INTERNAL AI -->
+      <div class="flip-card c-int fi d2" onclick="tapFlip(this)" role="button" aria-label="Internal AI card">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div class="card-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2.5" y="2.5" width="8" height="8" rx="2" stroke="#2DB896" stroke-width="1.5"/>
+                <rect x="13.5" y="2.5" width="8" height="8" rx="2" stroke="#2DB896" stroke-width="1.5"/>
+                <rect x="2.5" y="13.5" width="8" height="8" rx="2" stroke="#2DB896" stroke-width="1.5"/>
+                <rect x="13.5" y="13.5" width="8" height="8" rx="2" stroke="#2DB896" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="card-num">02</div>
+            <h3 class="card-title card-accent">Internal AI</h3>
+            <div class="card-rule"></div>
+            <p class="card-desc">Credibility anchors for customer conversations — how we're dogfooding AI across our own business with measurable outcomes.</p>
+            <span class="pill-tag">Customer Zero</span>
+            <div class="flip-hint">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M1.5 5.5h8M6.5 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Hover for detail
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="back-head card-accent">Internal AI Use Cases</div>
+            <div class="back-group">
+              <div class="back-group-label">What it covers</div>
+              <ul class="back-list">
+                <li>Shareable insight into how we're using AI inside Versent</li>
+                <li>Controls, governance, and outcomes — replicable stories</li>
+                <li>Proof we're not just talking about AI, we're running on it</li>
+              </ul>
+            </div>
+            <div class="back-group">
+              <div class="back-group-label">Examples</div>
+              <ul class="back-list">
+                <li>BidBot</li>
+                <li>Bid Response Analyst</li>
+                <li>Branded Deck Agent</li>
+                <li>ClaudeGuard legal agent</li>
+                <li>Payroll process automation</li>
+                <li>Marketing Lead enrichment (Hubspot)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: DELIVERY AI -->
+      <div class="flip-card c-del fi d3" onclick="tapFlip(this)" role="button" aria-label="Delivery AI card">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div class="card-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 12h4l3-8 4 16 3-9 2 1h4" stroke="#6B6BE8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="card-num">03</div>
+            <h3 class="card-title card-accent">Delivery AI</h3>
+            <div class="card-rule"></div>
+            <p class="card-desc">Embedding AI into our delivery approach — from tools adopted to repeatable accelerators and proprietary IP we've built.</p>
+            <span class="pill-tag">How We Work</span>
+            <div class="flip-hint">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M1.5 5.5h8M6.5 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Hover for detail
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="back-head card-accent">Delivery AI</div>
+            <div class="back-group">
+              <div class="back-group-label">AI Tools Adopted</div>
+              <ul class="back-list">
+                <li>GitHub Copilot (GHCP)</li>
+                <li>Claude Code</li>
+                <li>Snowflake CoWork</li>
+                <li>Notion Agents</li>
+                <li>Figma Make</li>
+              </ul>
+            </div>
+            <div class="back-group">
+              <div class="back-group-label">Accelerators &amp; IP</div>
+              <ul class="back-list">
+                <li>AppXray</li>
+                <li>Agentic Experience</li>
+                <li>Versent Security Agent</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: AI IN CUSTOMERS -->
+      <div class="flip-card c-cus fi d4" onclick="tapFlip(this)" role="button" aria-label="AI in Customers card">
+        <div class="flip-inner">
+          <div class="flip-front">
+            <div class="card-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="9" cy="8" r="4" stroke="#9B59D6" stroke-width="1.5"/>
+                <path d="M2 20c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#9B59D6" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M18 6.5c1.1.1 2 1 2 2.2 0 1.2-.9 2.1-2 2.2" stroke="#9B59D6" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M21 16.5c1.1.5 1.9 1.6 2 2.8" stroke="#9B59D6" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="card-num">04</div>
+            <h3 class="card-title card-accent">AI in our Customers</h3>
+            <div class="card-rule"></div>
+            <p class="card-desc">Case studies — named or anonymised — showcasing meaningful, measurable AI outcomes delivered for customers.</p>
+            <span class="pill-tag">Proof Points</span>
+            <div class="flip-hint">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path d="M1.5 5.5h8M6.5 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Hover for detail
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="back-head card-accent">AI in our Customers</div>
+            <div class="back-group">
+              <div class="back-group-label">What it covers</div>
+              <ul class="back-list">
+                <li>Case studies by Practice Area</li>
+                <li>Case studies by Industry</li>
+                <li>2–3 customer examples per practice</li>
+                <li>Focus on target industries first</li>
+              </ul>
+            </div>
+            <div class="back-group">
+              <div class="back-group-label">Approach</div>
+              <ul class="back-list">
+                <li>Named or anonymised stories</li>
+                <li>Insights from Tech Strategy Library Hub</li>
+                <li>VMR as the commercial engine underneath</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── DETAIL: GOVERNANCE ─── -->
+<section class="detail detail-alt" id="governance">
+  <div class="container">
+    <div class="detail-header fi">
+      <div class="detail-icon" style="background: var(--orange-bg);">
+        <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 2L3 8v6c0 6.5 5 12.7 12 14.5C22 28.7 27 22.5 27 16V8L15 2Z" stroke="#E8773A" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 15l3.5 3.5L21 11" stroke="#E8773A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="detail-num text-orange">01 — Foundation Layer</div>
+        <h2 class="detail-title">Versent's AI Governance<br><span class="text-orange">/ Adoption Approach</span></h2>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="body-copy-sm fi">
+        <p>Our AI governance approach sits across the top of everything we do — it's the foundation that the other three pillars rest on. It's informed by the MIT Enterprise AI Maturity Framework.</p>
+        <p>This is where a lot of businesses are winging it. We've built a mature model they can take inspiration from or emulate. A single-slide view of our AI strategy, with a crisp narrative around the journey to date and our approach.</p>
+        <p>Showcasing how we approach adoption and assessment of AI tools, and integrating AI into our processes — this is the governance story that gives customers the confidence to trust us as a partner.</p>
+      </div>
+      <div class="feature-list fi d1">
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--orange);"></div>
+          <div>
+            <h4>MIT Enterprise AI Maturity Framework</h4>
+            <p>Our governance model is anchored in a globally recognised AI maturity framework</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--orange);"></div>
+          <div>
+            <h4>Structured Adoption</h4>
+            <p>A repeatable, mature model for assessing and adopting AI tools responsibly</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--orange);"></div>
+          <div>
+            <h4>Shareable Narrative</h4>
+            <p>A crisp view that customer-facing teams can present with confidence to any audience</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DETAIL: INTERNAL AI ─── -->
+<section class="detail" id="internal">
+  <div class="container">
+    <div class="detail-header fi">
+      <div class="detail-icon" style="background: var(--teal-bg);">
+        <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2.5" y="2.5" width="10" height="10" rx="2.5" stroke="#2DB896" stroke-width="1.5"/>
+          <rect x="17.5" y="2.5" width="10" height="10" rx="2.5" stroke="#2DB896" stroke-width="1.5"/>
+          <rect x="2.5" y="17.5" width="10" height="10" rx="2.5" stroke="#2DB896" stroke-width="1.5"/>
+          <rect x="17.5" y="17.5" width="10" height="10" rx="2.5" stroke="#2DB896" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div>
+        <div class="detail-num text-teal">02 — Customer Zero</div>
+        <h2 class="detail-title">Internal <span class="text-teal">AI</span></h2>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="body-copy-sm fi">
+        <p>These are the <strong>credibility anchors for customer conversations.</strong> These stories should be shareable insight into how we're dogfooding AI in our own business — not just in delivery, but across the whole organisation.</p>
+        <p>What controls, governance and outcomes were delivered? How can they be replicated? We answer these questions through our Internal AI catalogue.</p>
+        <p>We're the customer zero for our own AI approach — and that's a powerful story to tell.</p>
+      </div>
+      <div class="feature-list fi d1">
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--teal);"></div>
+          <div>
+            <h4>BidBot &amp; Bid Response Analyst</h4>
+            <p>AI-powered bid and proposal automation at scale</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--teal);"></div>
+          <div>
+            <h4>Branded Deck Agent</h4>
+            <p>Automated on-brand presentation generation</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--teal);"></div>
+          <div>
+            <h4>ClaudeGuard Legal Agent</h4>
+            <p>AI-assisted legal review and contract analysis</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--teal);"></div>
+          <div>
+            <h4>Marketing Lead Enrichment</h4>
+            <p>Hubspot lead enrichment and qualification powered by AI</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DETAIL: DELIVERY AI ─── -->
+<section class="detail detail-alt" id="delivery">
+  <div class="container">
+    <div class="detail-header fi">
+      <div class="detail-icon" style="background: var(--indigo-bg);">
+        <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 15h5.5l3.5-9.5 5 19 4-12 2 2.5h6" stroke="#6B6BE8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="detail-num text-indigo">03 — How We Work</div>
+        <h2 class="detail-title">Delivery <span class="text-indigo">AI</span></h2>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="body-copy-sm fi">
+        <p>These stories highlight how we're embedding AI into our delivery approach — from the tools we've adopted through to the repeatable accelerators and IP we've built.</p>
+        <p>We're not just adopting AI tools — we're building proprietary accelerators that give our customers a tangible advantage in speed, quality, and repeatability.</p>
+        <p>All the way from AI-assisted tooling in our engineers' daily workflow, to fully productised accelerators we deploy on engagements.</p>
+      </div>
+      <div class="fi d1">
+        <div class="feature-list" style="margin-bottom: 1.25rem;">
+          <div class="feature-item">
+            <div class="f-dot" style="background: var(--indigo);"></div>
+            <div>
+              <h4>AppXray</h4>
+              <p>AI-powered application assessment and modernisation accelerator</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="f-dot" style="background: var(--indigo);"></div>
+            <div>
+              <h4>Agentic Experience</h4>
+              <p>Repeatable patterns for designing and delivering agentic AI solutions</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="f-dot" style="background: var(--indigo);"></div>
+            <div>
+              <h4>Versent Security Agent</h4>
+              <p>AI-assisted security assessment and automated remediation</p>
+            </div>
+          </div>
+        </div>
+        <div class="tool-box" style="background: var(--indigo-bg); border: 1px solid var(--indigo-bdr); border-radius: 14px; padding: 1.25rem 1.5rem;">
+          <div class="tool-box-label text-indigo">AI Tools Adopted in Delivery</div>
+          <div class="chip-row">
+            <span class="chip" style="border-color: var(--indigo-bdr); color: var(--indigo);">GitHub Copilot</span>
+            <span class="chip" style="border-color: var(--indigo-bdr); color: var(--indigo);">Claude Code</span>
+            <span class="chip" style="border-color: var(--indigo-bdr); color: var(--indigo);">Snowflake CoWork</span>
+            <span class="chip" style="border-color: var(--indigo-bdr); color: var(--indigo);">Notion Agents</span>
+            <span class="chip" style="border-color: var(--indigo-bdr); color: var(--indigo);">Figma Make</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DETAIL: AI IN CUSTOMERS ─── -->
+<section class="detail" id="customers">
+  <div class="container">
+    <div class="detail-header fi">
+      <div class="detail-icon" style="background: var(--purple-bg);">
+        <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="10" r="5" stroke="#9B59D6" stroke-width="1.5"/>
+          <path d="M3 26c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#9B59D6" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M21 8c1.4.1 2.5 1.3 2.5 2.8S22.4 13.6 21 13.7" stroke="#9B59D6" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M24.5 20c1.5.7 2.5 2.2 2.5 4" stroke="#9B59D6" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="detail-num text-purple">04 — Proof Points</div>
+        <h2 class="detail-title">AI in our <span class="text-purple">Customers</span></h2>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="body-copy-sm fi">
+        <p>Case studies — named or anonymised — that showcase our capability in delivering AI projects for customers. These are the stories that close deals.</p>
+        <p>Broken down by <strong>Practice Area</strong> and by <strong>Industry</strong>, with a focus on our priority segments first. Incorporating best practices from the Tech Strategy Library Hub.</p>
+        <p>VMR runs underneath as the commercial engine connecting these stories to real, measurable business outcomes. Build and Run need real-world customer stories even where they're not yet complete or fully referenceable.</p>
+      </div>
+      <div class="feature-list fi d1">
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--purple);"></div>
+          <div>
+            <h4>By Practice Area</h4>
+            <p>2–3 customer examples per practice area, covering the full breadth of Versent's capability</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--purple);"></div>
+          <div>
+            <h4>By Industry</h4>
+            <p>Targeted to priority industry segments, informed by where we're winning</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--purple);"></div>
+          <div>
+            <h4>Tech Strategy Library Hub</h4>
+            <p>Best practices from across industries incorporated into each story</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="f-dot" style="background: var(--purple);"></div>
+          <div>
+            <h4>VMR Commercial Engine</h4>
+            <p>Connecting every delivery story to measurable commercial outcomes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── APPROACH ─── -->
+<section class="approach section-sm" id="approach">
+  <div class="container">
+    <div class="fi" style="margin-bottom: 3rem;">
+      <div class="section-label">Phase 1</div>
+      <h2 class="section-title">Approach</h2>
+      <p class="section-lead">A packaged narrative — L50–L100 equivalent with written narrative. One story told consistently, whether shared internally or with a client.</p>
+    </div>
+
+    <div class="approach-card fi" style="border-color: rgba(201,255,0,0.14);">
+      <div class="approach-label text-green">Total Deliverable</div>
+      <h3>Packaged Narrative — L50–L100</h3>
+      <p>The result: one consistent story we can be proud of and confident in sharing — maintained and evolved by Tech Strategy with Glenn Carmichael as DRI.</p>
+      <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border);">
+        <dl class="meta-row">
+          <div class="meta-item">
+            <dt>DRI / Lead</dt>
+            <dd>Glenn Carmichael</dd>
+          </div>
+          <div class="meta-item">
+            <dt>Tech Strategy</dt>
+            <dd>Shanaya Weerasekera</dd>
+          </div>
+          <div class="meta-item">
+            <dt>Maintenance DRI</dt>
+            <dd>Glenn Carmichael</dd>
+          </div>
+          <div class="meta-item">
+            <dt>Phase 2</dt>
+            <dd>Demonstrator Path (Paul Nicholls)</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="pillar-cards-row fi d1">
+      <div class="approach-card" style="border-color: var(--orange-bdr);">
+        <div class="approach-label text-orange">AI Governance Approach</div>
+        <h3>Contributors</h3>
+        <p>Tim Hope, Div Horak</p>
+      </div>
+      <div class="approach-card" style="border-color: var(--teal-bdr);">
+        <div class="approach-label text-teal">Internal AI</div>
+        <h3>Contributors</h3>
+        <p>Shanaya Weerasekera, Joshua Lopez — Build: Cameron Robertson, Run: Rick Mathot</p>
+      </div>
+      <div class="approach-card" style="border-color: var(--indigo-bdr);">
+        <div class="approach-label text-indigo">Delivery AI</div>
+        <h3>Contributors</h3>
+        <p>Dylan McCarthy, Gareth Williams, Rod Sampera, Troy Ridgewell + Build and Run leads</p>
+      </div>
+      <div class="approach-card" style="border-color: var(--purple-bdr);">
+        <div class="approach-label text-purple">AI in our Customers</div>
+        <h3>Contributors</h3>
+        <p>Growth team, Practice leads — Build and Run (pre-released stories welcome)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">
+    <svg width="26" height="26" viewBox="0 0 30 30" fill="none">
+      <path d="M4 5L15 22L26 5" stroke="#C9FF00" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Versent <em>+ AI</em></span>
+  </div>
+  <p>Versent — AI-native engineering consultancy. AWS Premier Partner.</p>
+  <p style="margin-top: 0.3rem;">Phase 1 Deliverable &nbsp;·&nbsp; Internal &amp; Customer Facing</p>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  // Tap-to-flip for mobile (touch devices)
+  function tapFlip(card) {
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    const isMobile = window.innerWidth <= 640;
+    if (isTouch || isMobile) {
+      card.classList.toggle('flipped');
+    }
+  }
+
+  // Intersection observer for fade-in
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 90) cur = s.id;
+    });
+    links.forEach(l => {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + cur);
+    });
+  }, { passive: true });
+
+  // Close mobile nav on link click
+  links.forEach(l => l.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+  }));
+</script>
+</body>
+</html>
